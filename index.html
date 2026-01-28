@@ -5,22 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- ========================================= -->
-    <!-- SEO & META TAGS (Updated for Production)  -->
+    <!-- SEO & META TAGS                           -->
     <!-- ========================================= -->
-    <title>Talal Aseer Decoration Compnay | شركة تلال اسير للديكور</title>
+    <title>Talal Aseer Decoration Company | شركة تلال اسير للديكور</title>
+    <meta name="description" content="Premier supplier in Jazan for Gypsum Boards, Cement Boards, professional tools. | المورد الأول في جازان لألواح الجبس والأسمنت بورد.">
     
-    <!-- Description for Google Search -->
-    <meta name="description" content="Premier supplier in Jazan for Gypsum Boards, Cement Boards, professional tools, and building accessories. Fast delivery and high quality. | المورد الأول في جازان لألواح الجبس والأسمنت بورد والأدوات الاحترافية ومستلزمات البناء. توصيل سريع وجودة عالية.">
-    
-    <!-- Keywords -->
-    <meta name="keywords" content="Gypsum Board, Cement Board, Jazan Decoration, Building Supplies, Talal Aseer, Construction Tools, Saudi Arabia, ألواح جبس, أسمنت بورد, ديكور جازان, مواد بناء, طلال عسير, أدوات بناء">
-    
-    <meta name="author" content="Talal Aseer Decoration Company">
-    
-    <!-- PLACEHOLDER FOR GOOGLE VERIFICATION (Paste code from Google Search Console here later) -->
-    <!-- <meta name="google-site-verification" content="..." /> -->
-
-    <!-- FAVICON (Browser Tab Icon) -->
+    <!-- FAVICON -->
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
 
@@ -184,7 +174,6 @@
             margin-bottom: 25px;
             transition: 0.3s;
         }
-        .order-summary-box:hover { border-color: #e2e8f0; }
         
         .empty-state {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -234,7 +223,7 @@
         }
         html[dir="rtl"] .close-btn { left: auto; right: 20px; }
 
-        .unit-toggle-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
+        .unit-toggle-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
         .unit-btn-choice {
             padding: 10px 20px; border-radius: 10px; border: 1px solid #e2e8f0; background: white;
             cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-light);
@@ -518,6 +507,10 @@
             </p>
             
             <div id="unitOptionsContainer" class="unit-toggle-group"></div>
+            
+            <!-- NEW: Info Text (e.g., 1 Box Contains 12) -->
+            <div id="unitInfoText" style="margin-bottom: 15px; font-size: 0.9rem; color: var(--accent); font-weight: 600; min-height: 20px;"></div>
+
             <div id="dropdownArea" style="flex: 1;"></div>
 
             <!-- QTY -->
@@ -625,7 +618,6 @@
         }
 
         filtered.forEach((p) => {
-            // We pass the unique ID instead of index to be safer
             grid.innerHTML += `
                 <div class="product-card" onclick="window.openProduct('${p.id}')">
                     <div class="card-img-wrap">
@@ -647,6 +639,7 @@
 
         userSelection = {}; 
         currentQty = 1;
+        document.getElementById('unitInfoText').innerText = ""; 
         
         const isAr = document.documentElement.lang === 'ar';
         document.getElementById('detailTitle').innerText = isAr && currentProduct.nameAr ? currentProduct.nameAr : currentProduct.name;
@@ -655,22 +648,22 @@
         const unitContainer = document.getElementById('unitOptionsContainer');
         unitContainer.innerHTML = '';
         
+        // Render Unit Buttons
         if(currentProduct.units && currentProduct.units.length > 0) {
             let firstUnit = currentProduct.units[0];
             selectedUnit = typeof firstUnit === 'string' ? firstUnit : firstUnit.name; 
 
             currentProduct.units.forEach(u => {
                 const uName = typeof u === 'string' ? u : u.name;
-                const uQty = typeof u === 'string' ? 1 : (u.qty || 1);
-                let label = uName + (uQty > 1 ? ` (${uQty})` : '');
-
                 const btn = document.createElement('div');
                 btn.className = `unit-btn-choice ${uName === selectedUnit ? 'selected' : ''}`;
-                btn.innerText = label; 
+                btn.innerText = uName; 
                 btn.onclick = () => {
                     selectedUnit = uName;
                     document.querySelectorAll('.unit-btn-choice').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
+                    // Update the "Contains X items" text when unit changes
+                    window.updateUnitInfo();
                 };
                 unitContainer.appendChild(btn);
             });
@@ -697,7 +690,7 @@
 
     window.updateQtyUI = function() { document.getElementById('qtyDisplay').innerText = currentQty; };
 
-    // --- DROPDOWNS ---
+    // --- DROPDOWNS & INFO TEXT ---
     window.renderDropdowns = function(level) {
         const area = document.getElementById('dropdownArea');
         const totalLevels = currentProduct.cols ? currentProduct.cols.length : 0;
@@ -709,21 +702,29 @@
             for (let i = level; i < existing.length; i++) existing[i].remove();
         }
 
+        // Check if selection complete
         if (level >= totalLevels) {
             document.getElementById('nextBtn').classList.add('active');
+            window.updateUnitInfo(); // Check unit content based on final selection
             return;
         } else {
             document.getElementById('nextBtn').classList.remove('active');
+            document.getElementById('unitInfoText').innerText = ""; 
         }
 
+        // Filter valid options
         const validOptions = new Set();
         if(currentProduct.rows) {
             currentProduct.rows.forEach(row => {
                 if (!row.active) return;
+                
                 let match = true;
                 for (let i = 0; i < level; i++) {
-                    if (row.values[i] !== userSelection[i]) { match = false; break; }
+                    // FIX: Match against the correct language array
+                    const rowVal = isAr && row.valuesAr ? row.valuesAr[i] : row.values[i];
+                    if (rowVal !== userSelection[i]) { match = false; break; }
                 }
+
                 if (match) {
                     const val = isAr && row.valuesAr ? row.valuesAr[level] : row.values[level];
                     validOptions.add(val);
@@ -733,6 +734,7 @@
 
         if(totalLevels === 0) {
             document.getElementById('nextBtn').classList.add('active');
+            window.updateUnitInfo();
             return;
         }
 
@@ -743,7 +745,7 @@
         div.innerHTML = `
             <label class="select-label">${colName}</label>
             <select class="custom-select" onchange="window.handleSelect(${level}, this.value)">
-                <option value="">-- Select --</option>
+                <option value="">${isAr ? '-- اختر --' : '-- Select --'}</option>
                 ${Array.from(validOptions).map(opt => `<option value="${opt}">${opt}</option>`).join('')}
             </select>
         `;
@@ -754,6 +756,43 @@
         if (!value) { delete userSelection[level]; window.renderDropdowns(level); return; }
         userSelection[level] = value;
         window.renderDropdowns(level + 1);
+    };
+
+    // --- NEW: UPDATE UNIT INFO (Display "Contains 12 pieces") ---
+    window.updateUnitInfo = function() {
+        const infoBox = document.getElementById('unitInfoText');
+        infoBox.innerText = "";
+        
+        const isAr = document.documentElement.lang === 'ar';
+        const totalLevels = currentProduct.cols ? currentProduct.cols.length : 0;
+        
+        // Find the specific row that matches user selection
+        let matchedRow = null;
+
+        if(totalLevels === 0) {
+            if(currentProduct.rows && currentProduct.rows.length > 0) matchedRow = currentProduct.rows[0];
+        } else {
+            if(currentProduct.rows) {
+                matchedRow = currentProduct.rows.find(row => {
+                    for(let i=0; i<totalLevels; i++) {
+                        const rowVal = isAr && row.valuesAr ? row.valuesAr[i] : row.values[i];
+                        if(rowVal !== userSelection[i]) return false;
+                    }
+                    return true;
+                });
+            }
+        }
+
+        // If matched row found, check qty for selected unit
+        if(matchedRow && matchedRow.unitQtys && matchedRow.unitQtys[selectedUnit]) {
+            const contentQty = matchedRow.unitQtys[selectedUnit];
+            if(contentQty > 1) {
+                const text = isAr 
+                    ? `⚠️ 1 ${selectedUnit} يحتوي على: ${contentQty}` 
+                    : `⚠️ 1 ${selectedUnit} Contains: ${contentQty}`;
+                infoBox.innerText = text;
+            }
+        }
     };
 
     // --- CART ---
