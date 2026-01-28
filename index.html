@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- ========================================= -->
+    <!-- SEO & META TAGS (Updated for Production)  -->
+    <!-- ========================================= -->
+    <title>Talal Aseer Decoration Compnay | شركة تلال اسير للديكور</title>
+    
+    <!-- Description for Google Search -->
+    <meta name="description" content="Premier supplier in Jazan for Gypsum Boards, Cement Boards, professional tools, and building accessories. Fast delivery and high quality. | المورد الأول في جازان لألواح الجبس والأسمنت بورد والأدوات الاحترافية ومستلزمات البناء. توصيل سريع وجودة عالية.">
+    
+    <!-- Keywords -->
+    <meta name="keywords" content="Gypsum Board, Cement Board, Jazan Decoration, Building Supplies, Talal Aseer, Construction Tools, Saudi Arabia, ألواح جبس, أسمنت بورد, ديكور جازان, مواد بناء, طلال عسير, أدوات بناء">
+    
+    <meta name="author" content="Talal Aseer Decoration Company">
+    
+    <!-- PLACEHOLDER FOR GOOGLE VERIFICATION (Paste code from Google Search Console here later) -->
+    <!-- <meta name="google-site-verification" content="..." /> -->
+
+    <!-- FAVICON (Browser Tab Icon) -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Outfit:wght@300;400;500;600&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- LEAFLET MAP CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        :root {
+            /* Palette */
+            --primary: #0f172a;       
+            --primary-dark: #020617;
+            --accent: #f97316;
+            --accent-hover: #ea580c;
+            --accent-gradient: linear-gradient(135deg, #f97316 0%, #c2410c 100%);
+            --whatsapp: #25D366;
+            
+            /* Backgrounds */
+            --bg-body: #F8F9FB;
+            --bg-glass: rgba(255, 255, 255, 0.9);
+            
+            /* Text */
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            
+            /* UI Elements */
+            --radius: 16px;
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        }
+
+        /* BASE SETUP */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            overflow-x: hidden; 
+            line-height: 1.6;
+            padding-bottom: 90px;
+        }
+
+        /* FONTS & LANGUAGES */
+        html[lang="ar"] body, html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] button { font-family: 'Cairo', sans-serif; }
+        html[lang="en"] .lang-ar { display: none !important; }
+        html[lang="ar"] .lang-en { display: none !important; }
+
+        /* HEADER */
+        header {
+            position: sticky; top: 0; z-index: 1000;
+            background: var(--bg-glass);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+        }
+        .navbar {
+            max-width: 1400px; margin: auto; display: flex;
+            justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem;
+        }
+        .brand-wrapper { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; }
+        .brand-text { display: flex; flex-direction: column; }
+        .brand-name { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--primary); font-size: 1.1rem; line-height: 1.1; }
+        
+        .header-actions { display: flex; align-items: center; gap: 8px; }
+        .btn-lang { 
+            border: 1px solid #e2e8f0; background: white; padding: 0.5rem 1rem; 
+            cursor: pointer; border-radius: 50px; font-weight: 500; font-size: 0.85rem;
+            color: var(--primary); display: flex; align-items: center; transition: 0.2s;
+        }
+        .cart-icon-btn { 
+            position: relative; background: white; border: 1px solid #e2e8f0; cursor: pointer; 
+            width: 42px; height: 42px; border-radius: 50%; color: var(--primary); 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cart-badge {
+            position: absolute; top: -3px; right: -3px; background: var(--accent); color: white;
+            font-size: 0.7rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; border: 2px solid white; 
+            opacity: 0; transform: scale(0.5); transition: 0.3s;
+        }
+        .cart-badge.visible { opacity: 1; transform: scale(1); }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.7) 100%), url('background.png') center/cover fixed;
+            color: white; padding: 60px 20px;
+        }
+        .hero h1 { 
+            font-size: 3.5rem; margin-bottom: 1rem; font-weight: 800; font-family: 'Playfair Display', serif;
+            background: linear-gradient(to bottom, #ffffff 0%, #cbd5e1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p { font-size: 1.2rem; max-width: 600px; margin-bottom: 2.5rem; color: #cbd5e1; font-weight: 300; }
+        
+        .btn-cta { 
+            background: var(--accent-gradient); color: white; padding: 1rem 2.5rem; 
+            font-weight: 600; border-radius: 50px; text-decoration: none; transition: 0.3s; 
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4); font-size: 1.1rem;
+        }
+
+        /* SECTIONS */
+        section { padding: 5rem 1.5rem; }
+        .container { max-width: 1200px; margin: auto; }
+        .section-header { text-align: center; margin-bottom: 3.5rem; }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+        .line { width: 50px; height: 4px; background: var(--accent); margin: 0 auto; border-radius: 10px; }
+
+        /* ABOUT */
+        .about-container { display: flex; align-items: center; gap: 4rem; }
+        .about-img { width: 100%; border-radius: 20px; box-shadow: var(--shadow-card); }
+        .about-content { flex: 1; }
+        
+        /* SERVICES */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .service-card { 
+            background: white; padding: 3rem 2rem; text-align: center; border-radius: 20px; 
+            box-shadow: var(--shadow-card); border: 1px solid #f1f5f9;
+        }
+        .service-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+
+        /* CATALOG */
+        .search-wrapper { max-width: 600px; margin: 0 auto 40px auto; }
+        .search-box { 
+            width: 100%; padding: 18px 25px; border-radius: 50px; border: 2px solid #f1f5f9; 
+            background: white; font-size: 1rem; transition: 0.3s; font-family: inherit;
+        }
+        .search-box:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.1); }
+
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+        .product-card { 
+            background: white; border-radius: 20px; overflow: hidden; 
+            box-shadow: var(--shadow-card); transition: 0.3s; cursor: pointer;
+            display: flex; flex-direction: column; border: 1px solid #f8fafc;
+        }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        .card-img-wrap { width: 100%; aspect-ratio: 4/3; background: #f1f5f9; overflow: hidden; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .card-content { padding: 1.5rem; text-align: center; }
+        .card-title { font-weight: 700; color: var(--primary); font-size: 1.1rem; margin-bottom: 10px; }
+        .card-action { font-size: 0.8rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* CONTACT & MAP */
+        .contact-wrapper {
+            background: white; border-radius: 24px; box-shadow: var(--shadow-card); overflow: hidden;
+            display: grid; grid-template-columns: 1.5fr 1fr; border: 1px solid #f1f5f9;
+        }
+        .map-section { position: relative; min-height: 450px; background: #f1f5f9; }
+        #jazanMap { width: 100%; height: 100%; z-index: 1; }
+        
+        .order-section { padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
+        
+        .order-summary-box {
+            background: #ffffff;
+            border: 2px solid #f1f5f9;
+            border-radius: 16px;
+            padding: 20px;
+            height: 200px;
+            overflow-y: auto;
+            margin-bottom: 25px;
+            transition: 0.3s;
+        }
+        .order-summary-box:hover { border-color: #e2e8f0; }
+        
+        .empty-state {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; color: #94a3b8; gap: 10px;
+        }
+        .empty-icon { font-size: 2rem; opacity: 0.5; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-input {
+            width: 100%; padding: 18px 20px; border: 2px solid #f1f5f9; 
+            border-radius: 12px; font-family: inherit; font-size: 1rem; background: #f8fafc;
+            color: var(--primary); transition: 0.3s;
+        }
+        .form-input:focus { 
+            border-color: var(--primary); background: white; outline: none; 
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+        }
+
+        .btn-submit { 
+            background: var(--primary); color: white; padding: 20px; width: 100%; 
+            border: none; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1.1rem;
+            transition: 0.3s;
+        }
+        .btn-submit:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3); }
+
+        /* PRODUCT MODAL */
+        .view-overlay { 
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px);
+            z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; 
+            display: flex; align-items: center; justify-content: center; padding: 20px; 
+        }
+        .view-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .modal-box { 
+            background: white; width: 100%; max-width: 1000px; height: 85vh; 
+            border-radius: 24px; display: flex; overflow: hidden; position: relative; 
+        }
+        .modal-left { flex: 1.2; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .detail-img-full { width: 100%; height: 100%; object-fit: cover; }
+        .modal-right { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; }
+        
+        .close-btn { 
+            position: absolute; top: 20px; left: 20px; background: white; color: var(--primary); 
+            width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10; font-weight: bold;
+        }
+        html[dir="rtl"] .close-btn { left: auto; right: 20px; }
+
+        .unit-toggle-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
+        .unit-btn-choice {
+            padding: 10px 20px; border-radius: 10px; border: 1px solid #e2e8f0; background: white;
+            cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-light);
+        }
+        .unit-btn-choice.selected { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .custom-select { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #f1f5f9; font-family: inherit; font-size: 1rem; margin-bottom: 20px; }
+
+        .qty-wrapper { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 25px; border-top: 1px solid #f1f5f9; }
+        .qty-controls { display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 5px; border-radius: 10px; }
+        .qty-btn { width: 35px; height: 35px; background: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        .btn-modal-action { 
+            margin-top: 20px; width: 100%; padding: 18px; background: #e2e8f0; 
+            color: #94a3b8; border: none; border-radius: 14px; font-weight: 700; cursor: not-allowed; 
+        }
+        .btn-modal-action.active { background: var(--accent-gradient); color: white; cursor: pointer; }
+
+        /* CART SIDEBAR */
+        .cart-sidebar { 
+            position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100vh; 
+            background: white; box-shadow: -10px 0 50px rgba(0,0,0,0.1); z-index: 3000; 
+            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; 
+        }
+        html[dir="rtl"] .cart-sidebar { right: auto; left: -100%; }
+        .cart-sidebar.open { right: 0; }
+        html[dir="rtl"] .cart-sidebar.open { left: 0; }
+        
+        .cart-header { padding: 25px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+        .cart-items { flex: 1; overflow-y: auto; padding: 25px; }
+        .cart-item { display: flex; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; position: relative; }
+        .cart-item-img { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; }
+        .cart-item-remove { position: absolute; top: 0; right: 0; color: #ef4444; background: none; border: none; cursor: pointer; }
+        html[dir="rtl"] .cart-item-remove { right: auto; left: 0; }
+        .cart-footer { padding: 25px; border-top: 1px solid #f1f5f9; }
+        .btn-checkout { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; }
+
+        /* FLOATING BUTTONS */
+        .float-cart-btn { 
+            position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; border-radius: 50%; 
+            background: var(--primary); color: white; box-shadow: 0 15px 30px rgba(15,23,42,0.3); 
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; 
+            cursor: pointer; z-index: 990; border: 2px solid rgba(255,255,255,0.2); 
+        }
+        html[dir="rtl"] .float-cart-btn { right: auto; left: 30px; }
+        
+        .whatsapp-btn {
+            position: fixed; bottom: 30px; left: 30px; z-index: 995;
+            width: 65px; height: 65px; background: var(--whatsapp); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 15px 30px rgba(37, 211, 102, 0.3); border: 2px solid rgba(255,255,255,0.2);
+        }
+        html[dir="rtl"] .whatsapp-btn { left: auto; right: 30px; }
+        .whatsapp-icon { width: 35px; height: 35px; fill: white; }
+
+        footer { background: var(--primary-dark); color: #64748b; text-align: center; padding: 3rem 1.5rem; font-size: 0.9rem; }
+
+        /* --- RESPONSIVE RULES --- */
+        @media (max-width: 900px) {
+            section { padding: 4rem 1.2rem; }
+            .hero { min-height: 60vh; background-attachment: scroll; }
+            .hero h1 { font-size: 2.5rem; }
+            .about-container { flex-direction: column; gap: 2.5rem; }
+            .contact-wrapper { grid-template-columns: 1fr; }
+            .map-section { min-height: 300px; }
+            .modal-box { flex-direction: column; width: 100%; height: 100%; border-radius: 0; max-height: 100vh; }
+            .modal-left { height: 250px; flex: none; }
+            .modal-right { padding: 25px; }
+        }
+
+        @media (max-width: 500px) {
+            .navbar { padding: 0.8rem 1rem; }
+            .brand-name { font-size: 0.9rem; }
+            .logo-img { width: 35px; height: 35px; }
+            .hero h1 { font-size: 2.1rem; }
+            .hero p { font-size: 1rem; }
+            .grid-container { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .product-card { border-radius: 16px; }
+            .card-content { padding: 1rem 0.8rem; }
+            .card-title { font-size: 1rem; }
+            .cart-sidebar { width: 100%; max-width: 100%; }
+            .float-cart-btn, .whatsapp-btn { width: 55px; height: 55px; bottom: 20px; }
+            .float-cart-btn { right: 20px; } .whatsapp-btn { left: 20px; }
+            html[dir="rtl"] .float-cart-btn { left: 20px; } html[dir="rtl"] .whatsapp-btn { right: 20px; }
+        }
+    </style>
+</head>
+<body class="animate-in">
+
+<!-- CART OVERLAY -->
+<div id="cartOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15, 23, 42, 0.5);z-index:2900;display:none;backdrop-filter:blur(6px);" onclick="toggleCart(false)"></div>
+
+<!-- CART SIDEBAR -->
+<div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <div>
+            <span style="font-size:1.4rem; font-weight:800; font-family:'Playfair Display', serif;"><span class="lang-en">Your Cart</span><span class="lang-ar">سلة المشتريات</span></span>
+            <div style="font-size:0.85rem; color:var(--text-light); margin-top:4px;"><span id="cartCountHeader">0</span> <span class="lang-en">Items</span><span class="lang-ar">منتج</span></div>
+        </div>
+        <button style="background:var(--bg-body); border:none; color:var(--text-main); width:40px; height:40px; border-radius:50%; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center;" onclick="toggleCart(false)">✕</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+        <button class="btn-checkout" onclick="toggleCart(false); document.getElementById('contact').scrollIntoView();">
+            <span class="lang-en">Proceed to Checkout →</span>
+            <span class="lang-ar">إتمام الطلب ←</span>
+        </button>
+    </div>
+</div>
+
+<!-- FLOATING BUTTONS -->
+<div class="float-cart-btn" onclick="toggleCart(true)">
+    🛒
+    <span id="floatBadge" class="cart-badge">0</span>
+</div>
+
+<a href="https://wa.me/966531022199" class="whatsapp-btn" target="_blank" title="Chat on WhatsApp">
+    <svg class="whatsapp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.698c1.005.572 1.913.846 3.037.849h.001c3.181 0 5.767-2.586 5.767-5.766-.001-3.18-2.587-5.766-5.768-5.766zm-9.068 5.766c0-4.998 4.067-9.065 9.069-9.065 4.998 0 9.065 4.067 9.065 9.065 0 4.999-4.067 9.066-9.065 9.066-1.597 0-3.093-.418-4.425-1.139l-4.706 1.235 1.261-4.582c-.829-1.424-1.288-3.078-1.288-4.832zm14.075 2.977c-.167-.084-.991-.489-1.144-.545-.153-.056-.264-.084-.376.084-.111.168-.433.545-.53.656-.097.111-.194.125-.361.041-.167-.084-.705-.26-1.343-.828-.495-.441-.829-.986-1.009-1.153-.083-.167-.009-.257.075-.34.075-.075.167-.195.25-.293.084-.097.111-.166.167-.278.056-.111.028-.209-.014-.293-.042-.084-.376-.906-.515-1.241-.136-.328-.274-.283-.375-.288-.097-.005-.208-.006-.319-.006-.111 0-.292.042-.445.209-.153.167-.584.571-.584 1.393 0 .822.598 1.616.682 1.728.083.111 1.176 1.795 2.85 2.505 1.157.491 1.594.491 2.158.409.629-.09 1.597-.653 1.821-1.283.224-.63.224-1.17.157-1.283-.067-.112-.249-.179-.416-.263z"/>
+    </svg>
+</a>
+
+<!-- HEADER -->
+<header>
+    <div class="navbar">
+        <a href="#" class="brand-wrapper">
+            <img src="logo.png" class="logo-img" alt="TA" onerror="this.style.display='none'">
+            <div class="brand-text">
+                <span class="brand-name lang-en">Talal Aseer Decoration Company</span>
+                <span class="brand-name lang-ar">شركة تلال اسير للديكور</span>
+            </div>
+        </a>
+        <div class="header-actions">
+            <button class="btn-lang" onclick="toggleLanguage()">
+                <span class="lang-en">AR</span>
+                <span class="lang-ar">EN</span>
+            </button>
+            <button class="cart-icon-btn" onclick="toggleCart(true)">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span id="headerBadge" class="cart-badge">0</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+    <h1 class="lang-en">Building Supplies</h1>
+    <h1 class="lang-ar">مستلزمات البناء</h1>
+    <p class="lang-en">Gypsum Boards, Cement Boards & Tools.</p>
+    <p class="lang-ar">ألواح جبس وأسمنت وأدوات احترافية.</p>
+    <a href="#catalog" class="btn-cta"><span class="lang-en">Order Now</span><span class="lang-ar">اطلب الآن</span></a>
+</div>
+
+<!-- ABOUT -->
+<section id="about" style="background: white;">
+    <div class="container">
+        <div class="about-container">
+            <div class="about-img-box">
+                <img src="services.png" alt="About" class="about-img" onerror="this.src='https://placehold.co/600x400?text=Services+Image'">
+            </div>
+            <div class="about-content">
+                <h2 class="about-title"><span class="lang-en">About Us</span><span class="lang-ar">من نحن</span></h2>
+                <div class="line" style="margin: 0 0 30px 0;"></div>
+                <p class="about-text">
+                    <span class="lang-en">We are a local supplier in Jazan focused on gypsum boards, cement boards, tools and accessories. Our goal is simple: consistent quality, clear communication, and reliable delivery support.</span>
+                    <span class="lang-ar">نحن مورد محلي في جازان متخصصون في ألواح الجبس، الألواح الأسمنتية، والأدوات والإكسسوارات. هدفنا بسيط: جودة ثابتة، تواصل واضح، ودعم توصيل موثوق لضمان نجاح مشاريعكم.</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" style="background: var(--bg-body);">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="lang-en">Our Services</h2>
+            <h2 class="lang-ar">خدماتنا</h2>
+            <div class="line"></div>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <span class="service-icon">🧱</span>
+                <h3 class="service-title"><span class="lang-en">Gypsum & Cement</span><span class="lang-ar">ألواح الجبس والأسمنت</span></h3>
+                <p class="service-desc lang-en">High quality boards for interior and exterior use.</p>
+                <p class="service-desc lang-ar">ألواح عالية الجودة للاستخدام الداخلي والخارجي.</p>
+            </div>
+            <div class="service-card">
+                <span class="service-icon">🚚</span>
+                <h3 class="service-title"><span class="lang-en">Fast Delivery</span><span class="lang-ar">التوصيل السريع</span></h3>
+                <p class="service-desc lang-en">Reliable delivery service within Jazan region.</p>
+                <p class="service-desc lang-ar">خدمة توصيل موثوقة داخل منطقة جازان.</p>
+            </div>
+            <div class="service-card">
+                <span class="service-icon">🛠️</span>
+                <h3 class="service-title"><span class="lang-en">Tools & Accessories</span><span class="lang-ar">الأدوات والإكسسوارات</span></h3>
+                <p class="service-desc lang-en">Professional tools for installation and finishing.</p>
+                <p class="service-desc lang-ar">أدوات احترافية للتركيب والتشطيب.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CATALOG -->
+<section id="catalog" style="background: white;">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="lang-en">Product Catalog</h2>
+            <h2 class="lang-ar">كتالوج المنتجات</h2>
+            <div class="line"></div>
+        </div>
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search..." onkeyup="renderGrid()">
+        </div>
+        <!-- Grid will be populated by JS -->
+        <div id="productGrid" class="grid-container">
+            <div style="grid-column:1/-1; text-align:center; padding:30px;">Initializing Cloud...</div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT & CHECKOUT -->
+<section id="contact" style="background: var(--bg-body);">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="lang-en">Complete Order</h2>
+            <h2 class="lang-ar">إتمام الطلب</h2>
+            <div class="line"></div>
+        </div>
+        <div class="contact-wrapper">
+            <!-- LOCATION & MAP -->
+            <div class="map-section">
+                <div id="jazanMap"></div>
+            </div>
+
+            <!-- ORDER DETAILS -->
+            <div class="order-section">
+                <h3 style="color:var(--primary); margin-bottom:20px; font-weight:800; font-family:'Playfair Display', serif; font-size:1.6rem;"><span class="lang-en">Order Summary</span><span class="lang-ar">ملخص الطلب</span></h3>
+                
+                <div id="finalOrderList" class="order-summary-box">
+                    <div class="empty-state">
+                        <span class="empty-icon">🛒</span>
+                        <span>Cart is empty / السلة فارغة</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" id="custName" class="form-input" placeholder="Name | الاسم" required>
+                    <div style="height:15px;"></div>
+                    <input type="tel" id="custPhone" class="form-input" placeholder="Phone | الجوال" required>
+                </div>
+
+                <button class="btn-submit" onclick="submitOrder()">
+                    <span class="lang-en">Confirm & Send</span>
+                    <span class="lang-ar">تأكيد وإرسال</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p class="lang-en"> Talal Aseer Decoration Company </p>
+    <p class="lang-ar"> شركة تلال اسير للديكور </p>
+</footer>
+
+<!-- PRODUCT MODAL -->
+<div id="detailView" class="view-overlay">
+    <div class="modal-box">
+        <div class="modal-left">
+            <button class="close-btn" onclick="closeProduct()">✕</button>
+            <img id="detailImg" class="detail-img-full" src="">
+        </div>
+        <div class="modal-right">
+            <h2 id="detailTitle" style="font-family:'Playfair Display', serif; font-size:1.8rem; font-weight:800; color:var(--primary); margin-bottom:10px; line-height:1.2;">Product</h2>
+            <div style="height:4px; width:50px; background:var(--accent); margin: 0 0 25px 0; border-radius:10px;"></div>
+            
+            <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
+                <span class="lang-en">Select Unit</span><span class="lang-ar">اختر الوحدة</span>
+            </p>
+            
+            <div id="unitOptionsContainer" class="unit-toggle-group"></div>
+            <div id="dropdownArea" style="flex: 1;"></div>
+
+            <!-- QTY -->
+            <div class="qty-wrapper">
+                <span style="font-weight:800; color:var(--primary); font-size:1.1rem;"><span class="lang-en">Qty:</span><span class="lang-ar">العدد:</span></span>
+                <div class="qty-controls">
+                    <button class="qty-btn" onclick="changeQty(-1)">-</button>
+                    <span id="qtyDisplay" style="font-weight:bold; width:35px; text-align:center;">1</span>
+                    <button class="qty-btn" onclick="changeQty(1)">+</button>
+                </div>
+            </div>
+
+            <button id="nextBtn" class="btn-modal-action" onclick="addToCartAction()">
+                <span class="lang-en">Add to Cart</span>
+                <span class="lang-ar">أضف للسلة</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- LEAFLET MAP SCRIPT -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- ========================================== -->
+<!-- UNIFIED FIREBASE & APP SCRIPT              -->
+<!-- ========================================== -->
+<script type="module">
+    // 1. IMPORT FIREBASE
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // 2. CONFIG
+    const firebaseConfig = {
+        apiKey: "AIzaSyC8KH4SlRe16wNmGWnp4ozLo-uds84Z1z0",
+        authDomain: "talal-aseer-decoration-2024.firebaseapp.com",
+        projectId: "talal-aseer-decoration-2024",
+        storageBucket: "talal-aseer-decoration-2024.firebasestorage.app",
+        messagingSenderId: "234194780193",
+        appId: "1:234194780193:web:67b67f64967e85de712360"
+    };
+
+    // 3. INITIALIZE
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 4. GLOBAL STATE
+    let products = [];
+    let cart = JSON.parse(localStorage.getItem('ms_cart_v3')) || [];
+    let currentProduct = null;
+    let userSelection = {};
+    let currentQty = 1;
+    let selectedUnit = '';
+    let map, marker;
+    const JAZAN_CENTER = [16.889359, 42.570567]; 
+
+    // 5. DEFINE FUNCTIONS AND ATTACH TO WINDOW
+    // This is crucial so your HTML onclick="..." works
+    
+    // --- LOAD DATA ---
+    window.loadProductsFromCloud = async function() {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--primary);">⏳ Connecting to Cloud...</div>';
+
+        try {
+            const querySnapshot = await getDocs(collection(db, "products"));
+            
+            products = [];
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                data.id = doc.id; 
+                products.push(data);
+            });
+
+            // Sort by order
+            products.sort((a,b) => (a.order || 0) - (b.order || 0));
+
+            window.renderGrid();
+        } catch (error) {
+            console.error("Firebase Error:", error);
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:red; padding:20px; border:1px solid red; border-radius:10px;">
+                <b>Error loading products.</b><br>
+                1. Check Internet Connection.<br>
+                2. If you are the admin, ensure Firestore Rules are public.<br>
+                <small>${error.message}</small>
+            </div>`;
+        }
+    };
+
+    // --- RENDER GRID ---
+    window.renderGrid = function() {
+        const grid = document.getElementById('productGrid');
+        const term = document.getElementById('searchInput').value.toLowerCase();
+        grid.innerHTML = "";
+        
+        const filtered = products.filter(p => p.name.toLowerCase().includes(term) || (p.nameAr && p.nameAr.includes(term)));
+
+        if(products.length === 0) {
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:#94a3b8;">No products found in Cloud. (Admin must add products first)</div>`;
+            return;
+        }
+
+        if(filtered.length === 0) {
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:#94a3b8;">No matches found</div>`;
+            return;
+        }
+
+        filtered.forEach((p) => {
+            // We pass the unique ID instead of index to be safer
+            grid.innerHTML += `
+                <div class="product-card" onclick="window.openProduct('${p.id}')">
+                    <div class="card-img-wrap">
+                        <img src="${p.image || 'https://placehold.co/300?text=No+Image'}" class="card-img">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">${document.documentElement.lang === 'ar' && p.nameAr ? p.nameAr : p.name}</div>
+                        <div class="card-action"><span class="lang-en">View Details</span><span class="lang-ar">عرض التفاصيل</span></div>
+                    </div>
+                </div>
+            `;
+        });
+    };
+
+    // --- MODAL LOGIC ---
+    window.openProduct = function(id) {
+        currentProduct = products.find(p => p.id === id);
+        if(!currentProduct) return;
+
+        userSelection = {}; 
+        currentQty = 1;
+        
+        const isAr = document.documentElement.lang === 'ar';
+        document.getElementById('detailTitle').innerText = isAr && currentProduct.nameAr ? currentProduct.nameAr : currentProduct.name;
+        document.getElementById('detailImg').src = currentProduct.image || '';
+
+        const unitContainer = document.getElementById('unitOptionsContainer');
+        unitContainer.innerHTML = '';
+        
+        if(currentProduct.units && currentProduct.units.length > 0) {
+            let firstUnit = currentProduct.units[0];
+            selectedUnit = typeof firstUnit === 'string' ? firstUnit : firstUnit.name; 
+
+            currentProduct.units.forEach(u => {
+                const uName = typeof u === 'string' ? u : u.name;
+                const uQty = typeof u === 'string' ? 1 : (u.qty || 1);
+                let label = uName + (uQty > 1 ? ` (${uQty})` : '');
+
+                const btn = document.createElement('div');
+                btn.className = `unit-btn-choice ${uName === selectedUnit ? 'selected' : ''}`;
+                btn.innerText = label; 
+                btn.onclick = () => {
+                    selectedUnit = uName;
+                    document.querySelectorAll('.unit-btn-choice').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                };
+                unitContainer.appendChild(btn);
+            });
+        } else {
+            selectedUnit = 'Piece';
+            unitContainer.innerHTML = `<div class="unit-btn-choice selected">Piece</div>`;
+        }
+
+        window.updateQtyUI();
+        document.getElementById('detailView').classList.add('active');
+        window.renderDropdowns(0);
+    };
+
+    window.closeProduct = function() {
+        document.getElementById('detailView').classList.remove('active');
+        setTimeout(() => document.getElementById('dropdownArea').innerHTML = "", 300);
+    };
+
+    window.changeQty = function(delta) {
+        currentQty += delta;
+        if(currentQty < 1) currentQty = 1;
+        window.updateQtyUI();
+    };
+
+    window.updateQtyUI = function() { document.getElementById('qtyDisplay').innerText = currentQty; };
+
+    // --- DROPDOWNS ---
+    window.renderDropdowns = function(level) {
+        const area = document.getElementById('dropdownArea');
+        const totalLevels = currentProduct.cols ? currentProduct.cols.length : 0;
+        const isAr = document.documentElement.lang === 'ar';
+
+        if (level === 0) area.innerHTML = "";
+        else {
+            const existing = area.querySelectorAll('.custom-select-wrapper');
+            for (let i = level; i < existing.length; i++) existing[i].remove();
+        }
+
+        if (level >= totalLevels) {
+            document.getElementById('nextBtn').classList.add('active');
+            return;
+        } else {
+            document.getElementById('nextBtn').classList.remove('active');
+        }
+
+        const validOptions = new Set();
+        if(currentProduct.rows) {
+            currentProduct.rows.forEach(row => {
+                if (!row.active) return;
+                let match = true;
+                for (let i = 0; i < level; i++) {
+                    if (row.values[i] !== userSelection[i]) { match = false; break; }
+                }
+                if (match) {
+                    const val = isAr && row.valuesAr ? row.valuesAr[level] : row.values[level];
+                    validOptions.add(val);
+                }
+            });
+        }
+
+        if(totalLevels === 0) {
+            document.getElementById('nextBtn').classList.add('active');
+            return;
+        }
+
+        const colName = isAr && currentProduct.colsAr && currentProduct.colsAr[level] ? currentProduct.colsAr[level] : currentProduct.cols[level];
+        
+        const div = document.createElement('div');
+        div.className = "custom-select-wrapper";
+        div.innerHTML = `
+            <label class="select-label">${colName}</label>
+            <select class="custom-select" onchange="window.handleSelect(${level}, this.value)">
+                <option value="">-- Select --</option>
+                ${Array.from(validOptions).map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+            </select>
+        `;
+        area.appendChild(div);
+    };
+
+    window.handleSelect = function(level, value) {
+        if (!value) { delete userSelection[level]; window.renderDropdowns(level); return; }
+        userSelection[level] = value;
+        window.renderDropdowns(level + 1);
+    };
+
+    // --- CART ---
+    window.toggleCart = function(show) {
+        document.getElementById('cartSidebar').classList.toggle('open', show);
+        document.getElementById('cartOverlay').style.display = show ? 'block' : 'none';
+        if(show) window.updateFinalOrderList();
+    };
+
+    window.addToCartAction = function() {
+        const isAr = document.documentElement.lang === 'ar';
+        const name = isAr && currentProduct.nameAr ? currentProduct.nameAr : currentProduct.name;
+        
+        let detailsArr = [];
+        if(currentProduct.cols) {
+            currentProduct.cols.forEach((col, i) => { 
+                const colName = isAr && currentProduct.colsAr ? currentProduct.colsAr[i] : col;
+                detailsArr.push(`${colName}: ${userSelection[i]}`); 
+            });
+        }
+        
+        cart.push({
+            id: Date.now(),
+            name: name,
+            details: detailsArr.length > 0 ? detailsArr.join(' | ') : 'Standard',
+            qty: currentQty,
+            unit: selectedUnit,
+            image: currentProduct.image
+        });
+
+        localStorage.setItem('ms_cart_v3', JSON.stringify(cart));
+        window.updateCartUI();
+        window.updateFinalOrderList();
+        window.closeProduct();
+        window.toggleCart(true);
+    };
+
+    window.removeFromCart = function(id) {
+        cart = cart.filter(item => item.id !== id);
+        localStorage.setItem('ms_cart_v3', JSON.stringify(cart));
+        window.updateCartUI();
+        window.updateFinalOrderList();
+    };
+
+    window.updateCartUI = function() {
+        const container = document.getElementById('cartItems');
+        const count = cart.length;
+        document.getElementById('headerBadge').innerText = count;
+        document.getElementById('headerBadge').classList.toggle('visible', count > 0);
+        document.getElementById('floatBadge').innerText = count;
+        document.getElementById('floatBadge').classList.toggle('visible', count > 0);
+        document.getElementById('cartCountHeader').innerText = count;
+
+        container.innerHTML = "";
+        if(count === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:40px; color:#94a3b8;"><p>Cart is empty</p></div>`;
+            return;
+        }
+
+        cart.forEach(item => {
+            container.innerHTML += `
+                <div class="cart-item">
+                    <img src="${item.image || 'https://placehold.co/100'}" class="cart-item-img">
+                    <div style="flex:1;">
+                        <div style="font-weight:700; color:var(--primary);">${item.name}</div>
+                        <div style="font-size:0.85rem; color:var(--text-light);">${item.details}</div>
+                        <div style="font-size:0.9rem; font-weight:600; color:var(--accent); margin-top:5px;">${item.qty} x ${item.unit}</div>
+                    </div>
+                    <button class="cart-item-remove" onclick="window.removeFromCart(${item.id})">✕</button>
+                </div>
+            `;
+        });
+    };
+
+    window.updateFinalOrderList = function() {
+        const div = document.getElementById('finalOrderList');
+        if(cart.length === 0) {
+            div.innerHTML = `
+                <div class="empty-state">
+                    <span class="empty-icon">🛒</span>
+                    <span>Cart is empty / السلة فارغة</span>
+                </div>`;
+            return;
+        }
+        let html = "";
+        cart.forEach((item, i) => {
+             html += `<div style="margin-bottom:12px; border-bottom:1px solid #f1f5f9; padding-bottom:8px;">
+                <b style="color:var(--primary); font-size:0.95rem;">${i+1}. ${item.name}</b><br>
+                <small style="color:var(--text-light); display:block; margin-top:4px;">${item.qty} x ${item.unit} | ${item.details}</small>
+             </div>`;
+        });
+        div.innerHTML = html;
+    };
+
+    // --- SUBMIT ---
+    window.submitOrder = async function() {
+        if(cart.length === 0) return alert("Please add items to cart first.");
+        
+        const name = document.getElementById('custName').value;
+        const phone = document.getElementById('custPhone').value;
+        if(!name || !phone) return alert("Please enter Name and Phone number.");
+
+        const location = marker.getLatLng();
+        const isAr = document.documentElement.lang === 'ar';
+
+        let descText = "";
+        cart.forEach((item, i) => {
+            descText += `${i+1}. ${item.name}\n   - Qty: ${item.qty} ${item.unit}\n   - Type: ${item.details}\n\n`;
+        });
+
+        const newOrder = {
+            customer: name,
+            phone: phone,
+            locationCoords: `${location.lat},${location.lng}`,
+            locationLink: `https://www.google.com/maps?q=${location.lat},${location.lng}`,
+            status: 'Pending',
+            description: descText,
+            timestamp: new Date()
+        };
+
+        const btn = document.querySelector('.btn-submit');
+        btn.disabled = true;
+        btn.innerText = "Processing...";
+
+        try {
+            await addDoc(collection(db, "orders"), newOrder);
+            alert(isAr ? "تم إرسال الطلب بنجاح!" : "Order Sent Successfully!");
+            
+            cart = [];
+            localStorage.setItem('ms_cart_v3', JSON.stringify(cart));
+            window.updateCartUI();
+            window.updateFinalOrderList();
+            document.getElementById('custName').value = "";
+            document.getElementById('custPhone').value = "";
+            window.toggleCart(false);
+
+        } catch (e) {
+            console.error("Error sending order:", e);
+            alert("Connection Error. Please try again.");
+        }
+
+        btn.disabled = false;
+        btn.innerText = isAr ? "تأكيد وإرسال" : "Confirm & Send";
+    };
+
+    window.toggleLanguage = function() {
+        const html = document.documentElement;
+        const isAr = html.lang === 'en';
+        html.lang = isAr ? 'ar' : 'en';
+        html.dir = isAr ? 'rtl' : 'ltr';
+        window.renderGrid();
+        window.updateCartUI();
+    };
+
+    // --- INIT ---
+    // Start Map
+    function initMap() {
+        if(!document.getElementById('jazanMap')) return;
+        
+        map = L.map('jazanMap').setView(JAZAN_CENTER, 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        marker = L.marker(JAZAN_CENTER, {draggable: true}).addTo(map);
+
+        var jazanBounds = L.latLngBounds(L.latLng(16.300, 41.500), L.latLng(17.800, 43.800));
+        map.setMaxBounds(jazanBounds);
+        map.on('drag', function() { map.panInsideBounds(jazanBounds, { animate: false }); });
+
+        map.on('click', function(e) {
+            if (jazanBounds.contains(e.latlng)) { marker.setLatLng(e.latlng); } 
+            else { alert(document.documentElement.lang === 'ar' ? "الخدمة متاحة في منطقة جازان فقط" : "Service available in Jazan region only."); }
+        });
+
+        marker.on('dragend', function(e) {
+            if (!jazanBounds.contains(marker.getLatLng())) {
+                alert(document.documentElement.lang === 'ar' ? "الخدمة متاحة في منطقة جازان فقط" : "Service available in Jazan region only.");
+                marker.setLatLng(JAZAN_CENTER);
+                map.panTo(JAZAN_CENTER);
+            }
+        });
+    }
+
+    // Run Everything
+    initMap();
+    window.loadProductsFromCloud();
+    window.updateCartUI();
+
+</script>
+</body>
+</html>
