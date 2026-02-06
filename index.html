@@ -56,7 +56,7 @@
         }
 
         /* FONTS & LANGUAGES */
-        html[lang="ar"] body, html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] button { font-family: 'Cairo', sans-serif; }
+        html[lang="ar"] body, html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] button, html[lang="ar"] input { font-family: 'Cairo', sans-serif; }
         html[lang="en"] .lang-ar { display: none !important; }
         html[lang="ar"] .lang-en { display: none !important; }
 
@@ -146,8 +146,19 @@
             background: white; border-radius: 20px; overflow: hidden; 
             box-shadow: var(--shadow-card); transition: 0.3s; cursor: pointer;
             display: flex; flex-direction: column; border: 1px solid #f8fafc;
+            position: relative;
         }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        
+        /* Out of Stock styling */
+        .product-card.disabled { opacity: 0.7; pointer-events: none; filter: grayscale(1); }
+        .badge-out-stock {
+            position: absolute; top: 10px; right: 10px; z-index: 10;
+            background: #ef4444; color: white; padding: 4px 12px;
+            border-radius: 30px; font-size: 0.75rem; font-weight: 800;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+        }
+
         .card-img-wrap { width: 100%; aspect-ratio: 4/3; background: #f1f5f9; overflow: hidden; }
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         .card-content { padding: 1.5rem; text-align: center; }
@@ -234,7 +245,20 @@
 
         .qty-wrapper { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 25px; border-top: 1px solid #f1f5f9; }
         .qty-controls { display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 5px; border-radius: 10px; }
-        .qty-btn { width: 35px; height: 35px; background: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .qty-btn { width: 40px; height: 40px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: bold; color: var(--primary); }
+        .qty-btn:hover { background: #e2e8f0; }
+
+        /* TYPEABLE INPUT STYLE */
+        .qty-input-field {
+            width: 70px; height: 40px; text-align: center; border: 1px solid #e2e8f0; 
+            border-radius: 8px; font-weight: 700; font-size: 1.1rem; color: var(--primary);
+            -moz-appearance: textfield; /* Remove arrows Firefox */
+        }
+        .qty-input-field::-webkit-outer-spin-button,
+        .qty-input-field::-webkit-inner-spin-button {
+            -webkit-appearance: none; margin: 0; /* Remove arrows Chrome */
+        }
+        .qty-input-field:focus { border-color: var(--accent); }
 
         .btn-modal-action { 
             margin-top: 20px; width: 100%; padding: 18px; background: #e2e8f0; 
@@ -518,7 +542,8 @@
                 <span style="font-weight:800; color:var(--primary); font-size:1.1rem;"><span class="lang-en">Qty:</span><span class="lang-ar">العدد:</span></span>
                 <div class="qty-controls">
                     <button class="qty-btn" onclick="changeQty(-1)">-</button>
-                    <span id="qtyDisplay" style="font-weight:bold; width:35px; text-align:center;">1</span>
+                    <!-- TYPEABLE INPUT HERE -->
+                    <input type="number" id="qtyInput" value="1" min="1" class="qty-input-field" onchange="validateQty()">
                     <button class="qty-btn" onclick="changeQty(1)">+</button>
                 </div>
             </div>
@@ -561,7 +586,6 @@
     let cart = JSON.parse(localStorage.getItem('ms_cart_v3')) || [];
     let currentProduct = null;
     let userSelection = {};
-    let currentQty = 1;
     let selectedUnit = '';
     let map, marker;
     const JAZAN_CENTER = [16.889359, 42.570567]; 
@@ -618,8 +642,18 @@
         }
 
         filtered.forEach((p) => {
+            // Check Global Stock Status (Default true if undefined)
+            const isOutOfStock = p.inStock === false;
+            const disabledClass = isOutOfStock ? 'disabled' : '';
+            const clickAction = isOutOfStock ? '' : `onclick="window.openProduct('${p.id}')"`;
+            
+            const badge = isOutOfStock 
+                ? `<span class="badge-out-stock"><span class="lang-en">Out of Stock</span><span class="lang-ar">نفذت الكمية</span></span>` 
+                : '';
+
             grid.innerHTML += `
-                <div class="product-card" onclick="window.openProduct('${p.id}')">
+                <div class="product-card ${disabledClass}" ${clickAction}>
+                    ${badge}
                     <div class="card-img-wrap">
                         <img src="${p.image || 'https://placehold.co/300?text=No+Image'}" class="card-img">
                     </div>
@@ -638,7 +672,9 @@
         if(!currentProduct) return;
 
         userSelection = {}; 
-        currentQty = 1;
+        
+        // Reset Qty Input
+        document.getElementById('qtyInput').value = 1;
         document.getElementById('unitInfoText').innerText = ""; 
         
         const isAr = document.documentElement.lang === 'ar';
@@ -672,7 +708,6 @@
             unitContainer.innerHTML = `<div class="unit-btn-choice selected">Piece</div>`;
         }
 
-        window.updateQtyUI();
         document.getElementById('detailView').classList.add('active');
         window.renderDropdowns(0);
     };
@@ -682,13 +717,19 @@
         setTimeout(() => document.getElementById('dropdownArea').innerHTML = "", 300);
     };
 
+    // --- UPDATED QTY LOGIC (READS FROM INPUT) ---
     window.changeQty = function(delta) {
-        currentQty += delta;
-        if(currentQty < 1) currentQty = 1;
-        window.updateQtyUI();
+        const input = document.getElementById('qtyInput');
+        let current = parseInt(input.value) || 1;
+        current += delta;
+        if(current < 1) current = 1;
+        input.value = current;
     };
 
-    window.updateQtyUI = function() { document.getElementById('qtyDisplay').innerText = currentQty; };
+    window.validateQty = function() {
+        const input = document.getElementById('qtyInput');
+        if(parseInt(input.value) < 1 || !input.value) input.value = 1;
+    };
 
     // --- DROPDOWNS & INFO TEXT ---
     window.renderDropdowns = function(level) {
@@ -758,7 +799,6 @@
         window.renderDropdowns(level + 1);
     };
 
-    // --- NEW: UPDATE UNIT INFO (Display "Contains 12 pieces") ---
     window.updateUnitInfo = function() {
         const infoBox = document.getElementById('unitInfoText');
         infoBox.innerText = "";
@@ -766,7 +806,6 @@
         const isAr = document.documentElement.lang === 'ar';
         const totalLevels = currentProduct.cols ? currentProduct.cols.length : 0;
         
-        // Find the specific row that matches user selection
         let matchedRow = null;
 
         if(totalLevels === 0) {
@@ -783,7 +822,6 @@
             }
         }
 
-        // If matched row found, check qty for selected unit
         if(matchedRow && matchedRow.unitQtys && matchedRow.unitQtys[selectedUnit]) {
             const contentQty = matchedRow.unitQtys[selectedUnit];
             if(contentQty > 1) {
@@ -803,6 +841,9 @@
     };
 
     window.addToCartAction = function() {
+        // Read Qty directly from Input
+        const inputQty = parseInt(document.getElementById('qtyInput').value) || 1;
+
         const isAr = document.documentElement.lang === 'ar';
         const name = isAr && currentProduct.nameAr ? currentProduct.nameAr : currentProduct.name;
         
@@ -818,7 +859,7 @@
             id: Date.now(),
             name: name,
             details: detailsArr.length > 0 ? detailsArr.join(' | ') : 'Standard',
-            qty: currentQty,
+            qty: inputQty,
             unit: selectedUnit,
             image: currentProduct.image
         });
